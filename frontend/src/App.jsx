@@ -142,7 +142,7 @@ function App() {
 
 function OwnerAdminManager({ session }) {
   const [admins,setAdmins] = useState([]); const [form,setForm] = useState({name:'',email:'',password:''}); const [message,setMessage] = useState(''); const [busy,setBusy] = useState(false);
-  const api=import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const api = import.meta.env.VITE_API_URL || '/api';
   const load=async()=>{try{const r=await fetch(`${api}/owner/admins`,{headers:{Authorization:`Bearer ${session.token}`}});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.message||'Could not load administrator accounts.');setAdmins(j.data||[]);}catch(e){setMessage(e.message);}};
   useEffect(()=>{load();},[]);
   const create=async e=>{e.preventDefault();setBusy(true);setMessage('');try{const r=await fetch(`${api}/owner/admins`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.token}`},body:JSON.stringify(form)});const j=await r.json();if(!r.ok||!j.success)throw new Error(j.message||'Could not create administrator.');setForm({name:'',email:'',password:''});setMessage('Administrator account created.');await load();}catch(e){setMessage(e.message);}finally{setBusy(false);}};
